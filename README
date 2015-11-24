@@ -1,0 +1,32 @@
+# alejandro.hernandez@linux.intel.com
+# victor.rodriguez.bahena@intel.com
+
+meta-autofdo is a proof of concept layer for autofdo on Yocto.
+
+You need to manually copy autofdo.bbclass to meta/classes/ on your Yocto environment!.
+
+You need to add the path to meta-autofdo to bblayers.conf
+
+Usage:
+
+When profiling (default):
+AUTOFDO_FLAG = "0"
+
+When deploying enhanced application:
+AUTOFDO_FLAG = "1"
+
+# bubble acts as an example recipe
+Steps: 
+ - The bubble recipe must inherit autofdo
+ - Set AUTOFDO_FLAG = "0" on local.conf
+ - Include bubble on image via local.conf: CORE_IMAGE_EXTRA_INSTALL += "bubble"
+ - Run bitbake to build distribution: bitbake core-image-minimal
+ - Profile application on system: 
+	$ autofdo_bubble
+
+*** This will ultimately create the file bubble.gcov ***
+
+- Copy bubble.gcov to the build environment
+- Set AUTOFDO_FLAG = "1" on local.conf
+- Rebuild optimized distribution: bitbake -k core-image-minimal
+- Enjoy...

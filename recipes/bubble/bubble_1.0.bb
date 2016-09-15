@@ -1,6 +1,6 @@
 SUMMARY = "Bubble Sort test recipe to be implemented using AutoFDO"
 
-inherit autotools autofdo 
+inherit autotools autofdo-profile
 
 LICENSE = "CLOSED"
 LIC_FILES_CHKSUM = ""

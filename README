@@ -3,9 +3,11 @@
 
 meta-autofdo is a proof of concept layer for autofdo on Yocto.
 
-You need to manually copy autofdo.bbclass to meta/classes/ on your Yocto environment!.
+You need to manually copy  both autofdo-profile.bbclass
+and autofdo-compile.bbclass to meta/classes/ on your Yocto environment!.
 
 You need to add the path to meta-autofdo to bblayers.conf
+
 
 Usage:
 
@@ -15,18 +17,51 @@ AUTOFDO_FLAG = "0"
 When deploying enhanced application:
 AUTOFDO_FLAG = "1"
 
-# bubble acts as an example recipe
-Steps: 
- - The bubble recipe must inherit autofdo
+
+The following two variables may or may not be the same.
+If we're optimizing some C application they should be the same,
+but if the application is written on python for example
+they should be different, since we want to run and profile the script (AUTOFDO_APP)
+but we want to optimize the build for python (AUTOFDO_BIN).
+
+AUTOFDO_BIN = "python"
+AUTOFDO_APP = "matrixmult"
+
+The same applies for inheriting autofdo-profile and autofdo-compile, they should
+be inherited accordingly.
+
+
+# bubble acts as an example recipe written in C
+Steps:
+ - The bubble recipe must inherit autofdo-profile and autofdo-compile
  - Set AUTOFDO_FLAG = "0" on local.conf
+ - Set AUTOFDO_APP = "bubble"
+ - Set AUTOFDO_BIN = "bubble"
  - Include bubble on image via local.conf: CORE_IMAGE_EXTRA_INSTALL += "bubble"
- - Run bitbake to build distribution: bitbake core-image-minimal
- - Profile application on system: 
+ - Run bitbake to build distribution:
+  $ bitbake core-image-minimal
+
+ * Either manually profile application on system:
 	$ autofdo_bubble
 
 *** This will ultimately create the file bubble.gcov ***
 
-- Copy bubble.gcov to the build environment
-- Set AUTOFDO_FLAG = "1" on local.conf
-- Rebuild optimized distribution: bitbake -k core-image-minimal
-- Enjoy...
+   - And manually copy bubble.gcov back to the build environment
+
+
+ * Or you could also use the provided test, to automate the process:
+  * On local.conf:
+    # On local.conf add (without comments):
+    # INHERIT += "testimage"
+    # TEST_TARGET = "simpleremote"
+    # TEST_TARGET_IP = <TARGET IP ADDRESS>
+    # TEST_SERVER_IP = <DEV SYSTEM / HOST IP ADDRESS>
+    # TEST_SUITES =  " autofdo"
+
+  * Run the test to profile the app and get back the obtained data automagically:
+    $ bitbake core-image-minimal -c testimage
+
+ # Once we have the profiled data back on the HOST:
+ - Set AUTOFDO_FLAG = "1" on local.conf
+ - Rebuild optimized distribution: bitbake -k core-image-minimal
+ - Enjoy...

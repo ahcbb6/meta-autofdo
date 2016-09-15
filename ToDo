@@ -1,0 +1,11 @@
+# ToDo list on meta-autofdo
+
+- Fix perf on oe-core(master) to be able to get the profile data
+
+- Fix ocperf from pmu-tools to be able to get perf events(e.g. br_inst_retired_near_taken)
+ by name and not by code, this would require research to check the code for
+ all the different architectures (if they have it).
+
+- Test on other architectures and get statistics.
+
+- Include more examples, preferrably written in different languages to compare performance.

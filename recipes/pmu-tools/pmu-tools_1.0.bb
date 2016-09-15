@@ -13,7 +13,8 @@ S="${WORKDIR}/git"
 
 FILES_${PN} = "*"
 
-SRC_URI = "git://github.com/andikleen/pmu-tools"
+SRC_URI = "git://github.com/andikleen/pmu-tools \
+	file://pmu-events/ "
 
 
 # Needs more work, specially the links
@@ -26,7 +27,12 @@ do_install(){
 	install -d ${D}/opt/pmu-tools/simple-pebs
 	install -d ${D}/opt/pmu-tools/ucevent
 
+	install -d ${D}/home/root/.cache
+
 	cp -R * ${D}/opt/pmu-tools/
+
+	# Avoid downloading on target
+	cp -R ${WORKDIR}/pmu-events ${D}/home/root/.cache
 
 	install -d ${D}${bindir}
 	ln -s /opt/pmu-tools/ocperf.py ${D}${bindir}/ocperf

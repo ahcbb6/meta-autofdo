@@ -3,8 +3,10 @@
 
 meta-autofdo is a proof of concept layer for autofdo on Yocto.
 
-You need to manually copy  both autofdo-profile.bbclass
+You need to manually copy both autofdo-profile.bbclass
 and autofdo-compile.bbclass to meta/classes/ on your Yocto environment!.
+
+You need to manually copy autofdo.py to meta/lib/oeqa/runtime/ on your Yocto environment!.
 
 You need to add the path to meta-autofdo to bblayers.conf
 
